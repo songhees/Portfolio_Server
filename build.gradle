@@ -1,0 +1,32 @@
+plugins {
+	id 'java'
+    id 'war'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation platform("org.springframework:spring-framework-bom:6.2.15")
+    implementation "org.springframework:spring-webmvc"
+
+    implementation platform("com.fasterxml.jackson:jackson-bom:2.21.0")
+    implementation "com.fasterxml.jackson.core:jackson-databind"
+
+    compileOnly "jakarta.servlet:jakarta.servlet-api:6.0.0"
+    
+    testImplementation libs.junit.jupiter
+
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
