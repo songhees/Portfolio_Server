@@ -15,25 +15,26 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @ComponentScan(basePackages = "pofo_server.controller")
 public class WebConfig implements WebMvcConfigurer {
-    
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("*")
-                .allowCredentials(true)
-                .maxAge(3600);
-    }
 
-    // 요청에서 응답 컨텐츠 타입이 지정되지 않을 때 기본값을 JSON으로 설정
-    @Override
-    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-        configurer.defaultContentType(MediaType.APPLICATION_JSON);
-    }
+  @Override
+  public void addCorsMappings(CorsRegistry registry) {
+    registry
+        .addMapping("/**")
+        .allowedOrigins("http://localhost:3000")
+        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+        .allowedHeaders("*")
+        .allowCredentials(true)
+        .maxAge(3600);
+  }
 
-    @Override
-    public void configurePathMatch(PathMatchConfigurer configurer) {
-        configurer.addPathPrefix("/api", HandlerTypePredicate.forAnnotation(RestController.class));
-    }
+  // 요청에서 응답 컨텐츠 타입이 지정되지 않을 때 기본값을 JSON으로 설정
+  @Override
+  public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+    configurer.defaultContentType(MediaType.APPLICATION_JSON);
+  }
+
+  @Override
+  public void configurePathMatch(PathMatchConfigurer configurer) {
+    configurer.addPathPrefix("/api", HandlerTypePredicate.forAnnotation(RestController.class));
+  }
 }
