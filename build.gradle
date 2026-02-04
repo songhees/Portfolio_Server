@@ -2,12 +2,43 @@ plugins {
 	id 'java'
     id 'war'
     id 'checkstyle'
+    id("com.diffplug.spotless") version "8.2.1"
+    id "org.asciidoctor.jvm.convert" version "4.0.0"
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+spotless {
+    java {
+        target("src/**/*.java")
+
+        googleJavaFormat().aosp()
+
+        removeUnusedImports()
+        importOrder()             // import 정렬
+        trimTrailingWhitespace()  // 줄 끝 공백 제거
+        endWithNewline()          // 파일 끝 개행 보장
+    }
+
+    format("misc") {
+        target("**/*.gradle", "**/*.md", "**/.gitignore")
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
 }
 
 checkstyle {
-    toolVersion = '10.12.5'
+    toolVersion = '13.1.0'
     ignoreFailures = false
-    configFile = file('checkstyle.xml')
+    configFile = rootProject.file('checkstyle.xml')
+}
+
+configurations {
+	asciidoctorExt 
 }
 
 repositories {
@@ -15,16 +46,28 @@ repositories {
 }
 
 dependencies {
+	asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor:4.0.0' 
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc:4.0.0'
+
     implementation platform("org.springframework:spring-framework-bom:6.2.15")
     implementation "org.springframework:spring-webmvc"
     implementation "org.springframework:spring-context"
+
+    // logging dependencies
+    implementation 'org.slf4j:slf4j-api:2.0.16'
+    implementation 'ch.qos.logback:logback-classic:1.5.16'
+
     // database dependencies
     implementation "org.springframework:spring-jdbc"
     implementation "com.zaxxer:HikariCP:7.0.2"
     runtimeOnly "org.postgresql:postgresql:42.7.4"
+
     // mybatis dependencies
     implementation "org.mybatis:mybatis:3.5.19"
     implementation "org.mybatis:mybatis-spring:3.0.5"
+
+    compileOnly 'org.projectlombok:lombok:1.18.42'
+    annotationProcessor 'org.projectlombok:lombok:1.18.42'
 
     implementation platform("com.fasterxml.jackson:jackson-bom:2.21.0")
     implementation "com.fasterxml.jackson.core:jackson-databind"
@@ -36,12 +79,22 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
+ext { 
+	snippetsDir = file('build/generated-snippets')
 }
 
 tasks.named('test') {
+    outputs.dir snippetsDir
     useJUnitPlatform()
+}
+
+asciidoctor { 
+	inputs.dir snippetsDir 
+	configurations 'asciidoctorExt' 
+	dependsOn test 
+}
+
+task explodedWar(type: Copy) {
+    into "$buildDir/ROOT"
+    with war
 }
