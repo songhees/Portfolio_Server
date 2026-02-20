@@ -15,7 +15,7 @@ public class ExceptionControllerAdvice {
         ErrorStatus error = e.getErrorStatus();
         return ResponseEntity.status(error.getStatus())
                 .body(ErrorResponse.builder()
-                        .statusCode(error.getStatus().value())
+                        .statusCode(error.getCode())
                         .message(error.getMessage()).build());
     }
 
@@ -24,7 +24,7 @@ public class ExceptionControllerAdvice {
         ErrorStatus error = ErrorStatus.valueOf("BAD_REQUEST");
         return ResponseEntity.status(error.getStatus())
                 .body(ErrorResponse.builder()
-                        .statusCode(error.getStatus().value())
+                        .statusCode(error.getCode())
                         .message(error.getMessage()).build());
     }
 }
