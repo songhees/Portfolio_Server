@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="INFO">
     <Properties>
         <Property name="logPath">./logs</Property>
@@ -28,7 +29,7 @@
     </Appenders>
     <Loggers>
         <!-- mybatis 로그 mapper 패키지 작성-->
-        <Logger name="com.example.springcache.mapper" level="debug" additivity="false">
+        <Logger name="pofo_server.mapper" level="debug" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
         <!-- 루트 로거 -->

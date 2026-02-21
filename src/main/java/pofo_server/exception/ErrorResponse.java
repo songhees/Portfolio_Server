@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ErrorResponse {
-    private String statusCode;
-    private String message;
+  private String statusCode;
+  private String message;
 }

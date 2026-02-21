@@ -1,0 +1,207 @@
+openapi: 3.0.1
+info:
+  title: song-post API
+  description: API for managing song posts
+  version: 0.0.1
+servers:
+- url: http://localhost:8080
+tags: []
+paths:
+  /api:
+    get:
+      tags:
+      - api
+      summary: 곡 게시글 목록 조회 API
+      description: 노래 게시글을 조회합니다.
+      operationId: get-song-posts
+      parameters:
+      - name: page
+        in: query
+        description: 페이지 번호 (1부터 시작)
+        required: false
+        schema:
+          type: string
+      - name: size
+        in: query
+        description: "페이지당 항목 수 (기본값: 10)"
+        required: false
+        schema:
+          type: string
+      - name: sortBy
+        in: query
+        description: 정렬 기준 필드
+        required: false
+        schema:
+          type: string
+      - name: sortDirection
+        in: query
+        description: 정렬 방향 (asc 또는 desc)
+        required: false
+        schema:
+          type: string
+      - name: search
+        in: query
+        description: 검색어
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api1730810726'
+              examples:
+                get-song-posts:
+                  value: "[{\"postId\":1,\"songId\":1,\"userId\":\"a8a9d33c-abcf-47f4-9eff-7a2e64a34d90\"\
+                    ,\"title\":\"Best Song Post\",\"content\":\"This is the best song\
+                    \ post content.\",\"likeCount\":100,\"createdAt\":1771634453.172820300,\"\
+                    updatedAt\":null,\"deletedAt\":null}]"
+  /api/posts:
+    post:
+      tags:
+      - Song
+      summary: 노래 게시글 추가
+      description: "새로운 노래 게시글을 등록하고, 연결된 노래 정보를 반환받습니다."
+      operationId: add-song-post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api-posts-866457778'
+            examples:
+              add-song-post:
+                value: "{\"postId\":null,\"songId\":10,\"userId\":\"2b8bb9f0-f74e-4ff8-adc0-238866d2b3d9\"\
+                  ,\"title\":\"New Post Title\",\"content\":\"This is a new song post\
+                  \ content.\",\"likeCount\":0,\"createdAt\":null,\"updatedAt\":null,\"\
+                  deletedAt\":null}"
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api-posts147472707'
+              examples:
+                add-song-post:
+                  value: "{\"songId\":1,\"trackId\":\"track123\",\"title\":\"Song\
+                    \ Title\",\"artistName\":\"Artist Name\",\"albumName\":\"Album\
+                    \ Name\",\"releaseDate\":[2026,2,21],\"artworkUrl\":\"http://example.com/artwork.jpg\"\
+                    ,\"postCount\":1,\"createdAt\":1771634452.508552400,\"updatedAt\"\
+                    :null,\"songPosts\":[{\"postId\":1,\"songId\":1,\"userId\":\"\
+                    c8557cc7-d7ca-42e5-b7e3-db70de4e0139\",\"title\":\"Best Song Post\"\
+                    ,\"content\":\"This is the best song post content.\",\"likeCount\"\
+                    :100,\"createdAt\":1771634452.508552400,\"updatedAt\":null,\"\
+                    deletedAt\":null}]}"
+components:
+  schemas:
+    api-posts-866457778:
+      type: object
+      properties:
+        likeCount:
+          type: number
+          description: 좋아요 수
+        title:
+          type: string
+          description: 게시글 제목
+        userId:
+          type: string
+          description: 작성자 UUID
+        songId:
+          type: number
+          description: 연결할 노래 ID
+        content:
+          type: string
+          description: 게시글 내용
+    api-posts147472707:
+      type: object
+      properties:
+        createdAt:
+          type: number
+          description: 노래 정보 생성 시간
+        albumName:
+          type: string
+          description: 앨범 명
+        songPosts:
+          type: array
+          description: 이 노래에 달린 게시글 목록
+          items:
+            type: object
+            properties:
+              createdAt:
+                type: number
+                description: 게시글 생성 시간
+              likeCount:
+                type: number
+                description: 좋아요 수
+              postId:
+                type: number
+                description: 게시글 ID
+              title:
+                type: string
+                description: 게시글 제목
+              userId:
+                type: string
+                description: 작성자 UUID
+              songId:
+                type: number
+                description: 연결된 노래 ID
+              content:
+                type: string
+                description: 게시글 내용
+        releaseDate:
+          type: array
+          description: 발매일 (yyyy-MM-dd)
+          items:
+            oneOf:
+            - type: object
+            - type: boolean
+            - type: string
+            - type: number
+        artworkUrl:
+          type: string
+          description: 앨범 아트워크 URL
+        trackId:
+          type: string
+          description: 트랙 ID
+        postCount:
+          type: number
+          description: 이 노래에 달린 게시글 수
+        artistName:
+          type: string
+          description: 아티스트 명
+        title:
+          type: string
+          description: 노래 제목
+        songId:
+          type: number
+          description: 노래 ID
+    api1730810726:
+      type: array
+      description: 노래 게시글 목록
+      items:
+        type: object
+        properties:
+          createdAt:
+            type: number
+            description: 생성 일시
+          likeCount:
+            type: number
+            description: 좋아요 수
+          postId:
+            type: number
+            description: 게시글 ID
+          title:
+            type: string
+            description: 게시글 제목
+          userId:
+            type: string
+            description: 작성자 UUID
+          songId:
+            type: number
+            description: 노래 ID
+          content:
+            type: string
+            description: 게시글 내용
+        description: 노래 게시글 목록
