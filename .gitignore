@@ -37,3 +37,11 @@ application-prod.yml
 
 # Checkstyle
 checkstyle-cache/
+
+# Claude Code (local settings only — project settings.json is committed)
+.claude/settings.local.json
+
+# Server run logs (임시)
+run.log
+run_err.log
+server_full.log

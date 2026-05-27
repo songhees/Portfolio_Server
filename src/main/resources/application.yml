@@ -85,6 +85,13 @@ logging:
     com.chiup.portfolio: INFO
     org.hibernate.SQL: WARN
 
+# prod 환경에서 API 문서 완전 비활성화
+springdoc:
+  swagger-ui:
+    enabled: false
+  api-docs:
+    enabled: false
+
 ---
 spring:
   config:
